@@ -1,4 +1,4 @@
-# Projects - Welcome to my Github! I share completed projects here  <i>Mostly stuffs related to the Music Industry
+# Projects - Welcome to my Github! I share completed projects here and they are <i>Music Industry</i> specific.
  
  
 # BBChart
