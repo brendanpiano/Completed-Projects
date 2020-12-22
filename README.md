@@ -14,5 +14,15 @@ Constructed statistical models tailored specifically to music companies to facil
 
 - FACTORS OF POPULARITY - As a music label, we see that times are changing and it’s important to stay on top of current trends. We are very interested in identifying the factors that influence the popularity of songs. We believe that popularity is the most valuable KPI, and it is the most directly related to revenue.
 
+# 3. Drummer Expressiveness 
+Developed statistical models to test several hypothesis that affect Drummer Expressiveness. Dataset obtained from figshare. Statistical methods used:
+- Linear Model 
+
+- Bayesian Linear Model
+
+- Bayesian Logistic Regression
+
+- Linear Model with multiple factors
+
 
 
