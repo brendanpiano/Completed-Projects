@@ -1,0 +1,181 @@
+---
+title: "AS.FINAL"
+author: "Brendan Chua"
+date: "11/21/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Explanation of your data source (where you got it, why it is interesting, etc.) 
+
+Was browsing through research articles on a research platform called 'Frontier' where researchers post their results and findings. I stumbled across a research study called "Effect of Long-Term Music Training on Emotion Perception From Drumming Improvisation" which was conducted by researchers from the UK and Italy. They collected the data and posted the dataset to figshare, a platform for sharing dataset. I downloaded the Emotion dataset from figshare. Though the dataset is meant for music psychology research, I decided to use it for this project as a 'switch' from other musical projects I did for the other courses and I thought getting to know a little bit of music psychology is pretty fun too. I find this dataset interesting because instead of doing some work that deals specifically just on music, this dataset gave me a chance to find out the relationship between drummers expressions and happiness. Also, as a musician myself, though not a drummer, getting to know how drummers express their feelings helps me better understand drummers overall. 
+
+# 2. Questions/hypotheses
+
+Q1) Is drummer expressiveness dependent on happiness?
+
+Null: Drummer expressiveness is not dependent on happiness
+
+Alternative: Drummer expressiveness is dependent on happiness
+
+Q2) Is perceived expressiveness dependent on drummer expressiveness when combined with other factors?
+
+Null: Perceived expressiveness is not dependent on drummer expressiveness when combined with other factors 
+
+Alternative: Perceived expressiveness is dependent on drummer expressiveness when combined with other factors 
+
+# 3. The analyses used
+
+Linear Model (Q1)
+
+Bayesian Linear Model 
+
+Bayesian Logistic Regression
+
+Linear Model with multiple factors (Q2)
+
+# 4. Results and an interpretation of those results 
+
+Results and Interpretation Commented under each model
+
+# 5. Why the results matter
+
+The results matter because that gave me more insights into how musicians, especially drummers in this case, express their feelings. The findings are pretty interesting in my opinion. The results of this assignment also gave me the opportunity to pay more attention to how drummers express their feelings. If next time I were to have a jam session with drummers, I will take note of the music genre, their gender, complexity of the song, tempo, and the drummer style, and pay more attention towards the level of expressiveness of the drummer. That in the long run, would help me better understand drummers overall. 
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+```{r}
+library(readr)
+Emotion_Data <- read_csv("~/Desktop/Dataset Music Emotion Perception.csv")
+```
+
+```{r}
+summary(Emotion_Data)
+```
+
+```{r}
+unique(Emotion_Data$GROUP)
+unique(Emotion_Data$INSTRUMENT_PLAYED)
+unique(Emotion_Data$MUSICAL_GENRE)
+unique(Emotion_Data$COMPLEXITY)
+unique(Emotion_Data$GENDER)
+unique(Emotion_Data$TEMPO)
+unique(Emotion_Data$DRUMMER_EXPRESSIVENESS)
+unique(Emotion_Data$DRUMMER_STYLE)
+unique(Emotion_Data$MODALITY)
+```
+
+```{r}
+str(Emotion_Data)
+```
+
+# Linear Model
+
+First, I need to change my drummer expressivess from a factor to numeric 
+```{r}
+library(dplyr)
+Emotion_Data_2 <- Emotion_Data %>%
+  mutate(`DRUMMER_EXPRESSIVENESS` = replace(`DRUMMER_EXPRESSIVENESS`, `DRUMMER_EXPRESSIVENESS` == 'expressive', '1'))%>%
+  mutate(`DRUMMER_EXPRESSIVENESS` = replace(`DRUMMER_EXPRESSIVENESS`, `DRUMMER_EXPRESSIVENESS` == 'neutral', '0')) 
+```
+
+Running lm model 
+```{r}
+Mod_int <- lm(DRUMMER_EXPRESSIVENESS ~ happiness, data = Emotion_Data_2)
+
+summary(Mod_int)
+```
+
+```{r}
+coef(Mod_int)
+```
+
+Results shows that they are significantly correlated. So for that reason, I can reject the NULL. 
+
+# Bayesian Linear Model
+```{r}
+library(rstanarm)
+
+blm = stan_lm(DRUMMER_EXPRESSIVENESS ~ happiness , 
+              data = Emotion_Data_2, 
+              prior = R2(.1, "mean"), seed = 888888, chains = 5,
+              cores = (parallel::detectCores() - 1),
+              iter = 8888)
+```
+
+```{r}
+summary(blm)
+```
+
+```{r}
+posterior_interval(blm, prob = .95, pars = "happiness")
+```
+
+95% of the true parameter fall between this range - 0.0698 to 0.14.
+
+Plotting to see how it looks 
+```{r}
+rstan::stan_trace(blm, pars = "happiness")
+```
+
+# Bayesian Logistic regression
+```{r}
+library(ggplot2)
+
+Emotion_Data_2<- Emotion_Data
+```
+
+```{r}
+logTest = glm(as.factor(DRUMMER_EXPRESSIVENESS) ~ happiness, 
+              data = Emotion_Data_2[sample(1:nrow(Emotion_Data_2), replace = FALSE), ], 
+              family = binomial)
+
+summary(logTest)
+```
+
+```{r}
+bLog = stan_glm(as.factor(DRUMMER_EXPRESSIVENESS) ~ happiness, data = Emotion_Data_2, family = binomial,
+              prior = student_t(df = 7, location = 0, scale = 2.5), 
+              prior_intercept = student_t(df = 7, location = 0, scale = 2.5), 
+              seed = 888888, chains = 5,
+              cores = (parallel::detectCores() - 1),
+              iter = 5000)
+
+summary(bLog)
+```
+
+```{r}
+exp(-0.4)
+```
+
+For every unit increase in happiness, the odds of staying on expressive increase by 33%. Or in other words, increase the chances of staying on expressive. 
+
+# Second lm model: perceived expressiveness on drummer expressiveness (With multiple factors)
+
+```{r}
+Emotion_Data_3 <- Emotion_Data
+
+lm2 <-lm(perceived_expressiveness ~ DRUMMER_EXPRESSIVENESS + COMPLEXITY + DRUMMER_STYLE + MUSICAL_GENRE + TEMPO + GENDER, 
+         data = Emotion_Data_3)
+summary(lm2)
+```
+
+```{r}
+library(effects)
+plot(effect("MUSICAL_GENRE * TEMPO",lm2))
+plot(effect("COMPLEXITY * DRUMMER_STYLE",lm2))   
+plot(effect("DRUMMER_EXPRESSIVENESS * COMPLEXITY",lm2))   
+plot(effect("DRUMMER_EXPRESSIVENESS * MUSICAL_GENRE",lm2)) 
+plot(effect("DRUMMER_EXPRESSIVENESS * DRUMMER_STYLE",lm2)) 
+plot(effect("DRUMMER_EXPRESSIVENESS * GENDER",lm2)) 
+plot(effect("DRUMMER_EXPRESSIVENESS * TEMPO",lm2)) 
+```
+
+Since the results shows that external factors such as Tempo, Gender, Musical Genre, Drummer Style have a huge impact on the perceived expressiveness on drummer expressiveness as shown in the various graphs respectively, I can conclude that they did indeed play a role here in determining the perceived expressivenss of drummer expressiveness 
+
+SO based on that, I can reject the NULL hypothesis
+
