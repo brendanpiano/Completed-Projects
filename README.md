@@ -2,10 +2,12 @@
  Welcome to my Github! I share completed projects here - Mostly stuffs related to the Music Industry
  
  
-# BBChart - Predicting the BillboardHot 100 Chart with Machine Learning, with the use of XGBoost model. Dataset obtained from the Million Song database. 
+# BBChart
+- Predicting the BillboardHot 100 Chart with Machine Learning, with the use of XGBoost model. Dataset obtained from the Million Song database. 
 
 
-# Spotify Analysis - Constructed statistical models tailored specifically to music companies to facilitate business decisions given certain scenarios. Dataset obtained from Kaggle. The different scenarios are breifly described below: 
+# Spotify Analysis
+- Constructed statistical models tailored specifically to music companies to facilitate business decisions given certain scenarios. Dataset obtained from Kaggle. The different scenarios are breifly described below: 
 
 MUSIC FESTIVAL -Our label is sponsoring a music festival and we are trying to decide which genre to invite to perform. 
 
