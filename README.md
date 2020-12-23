@@ -2,7 +2,7 @@
  
  
 # 1. BBChart
-Predicting the BillboardHot 100 Chart with Machine Learning, with the use of XGBoost model. Dataset obtained from the Million Song database. 
+Predicting the BillboardHot 100 Chart with Machine Learning, with the use of XGBoost model and its various tuning functions. Dataset obtained from the Million Song database. 
 
 
 # 2. Spotify Analysis
