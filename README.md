@@ -1,4 +1,4 @@
-# Welcome to my Github! Here I share completed projects that are <i>Music & Entertainment Industry</i> specific.
+# Welcome to my Github! Here I share completed projects that are <i><b>Music & Entertainment Industry</b></i> specific.
  
  
 # 1. BBChart
