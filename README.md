@@ -45,7 +45,7 @@ Insights into how small companies differ from big companies in the music industr
 - Emphasis placed on structure, culture, and flexibility
 
 
-# 7. Nike Social Media Campaign 
+# 8. Nike Social Media Campaign 
 Conducted a four part research on brand audit, target audience, social media platform audit, and benchmarks to develop the Nike #RunWithMe Campaign.
 - Include formulated objectives, strategies, and tactics that led to a specific content calender. 
 
